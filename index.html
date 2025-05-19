@@ -371,7 +371,7 @@
         function findConjunctions(planetIndex, rashiNumber, allSelects) {
             let conjunctions = [];
             allSelects.forEach((select, index) => {
-                if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '') {
+                if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '' && planets[index] !== 'Lagna') {
                     conjunctions.push(planets[index]);
                 }
             });
@@ -557,6 +557,169 @@
             
             rashiCell.appendChild(select);
         });
+    </script>
+
+    <!-- Read Button -->
+    <style>
+        /* Read Button Container Styles */
+        .read-button-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .read-button {
+            padding: 10px 20px;
+            background-color: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease;
+        }
+
+        .read-button:hover {
+            background-color: #283593;
+        }
+
+        /* Context Window Styles */
+        .context-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1999;
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .context-window {
+                background-color: #1e1e1e;
+                color: #ffffff;
+            }
+        }
+    </style>
+
+    <!-- Add these elements before the closing body tag -->
+    <div class="read-button-container">
+        <button class="read-button" onclick="showContextWindow()">Read</button>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="context-window" id="contextWindow">
+        <h2>Planet Details</h2>
+        <div id="planetDetails"></div>
+        <div class="button-container">
+            <button class="context-button print-button" onclick="downloadPlanetDetails()">Print</button>
+            <button class="context-button close-button" onclick="hideContextWindow()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // Add the context window functions
+        function showContextWindow() {
+            const contextWindow = document.getElementById('contextWindow');
+            const overlay = document.getElementById('overlay');
+            const planetDetails = document.getElementById('planetDetails');
+            planetDetails.innerHTML = '';
+        
+            const selects = document.querySelectorAll('select');
+            
+            planets.forEach((planet, index) => {
+                const select = selects[index];
+                const row = select.parentNode.parentNode;
+                const rashiValue = select.value ? rashis[parseInt(select.value) - 1] : '';
+                const adhipathya = row.cells[2].textContent;
+                const sthaana = row.cells[4].textContent;
+                const samyoga = row.cells[5].textContent;
+                const drusti = row.cells[6].textContent;
+        
+                if ((rashiValue || adhipathya || sthaana || samyoga || drusti) && planet !== 'Lagna') {
+                    const planetInfo = document.createElement('div');
+                    planetInfo.className = 'planet-info';
+                    
+                    let infoText = `<h3>${planet}: </h3><p>`;
+                    
+                    if (adhipathya) {
+                        infoText += `${adhipathya} Lord ${planet}`;
+                    } else {
+                        infoText += planet;
+                    }
+                    
+                    if (sthaana) {
+                        infoText += ` posited in ${sthaana} House`;
+                    }
+                    
+                    if (samyoga) {
+                        infoText += `. Samyoga with ${samyoga}`;
+                    }
+                    
+                    if (drusti) {
+                        infoText += `. aspected by ${drusti}`;
+                    }
+                    
+                    infoText += '.</p>';
+                    planetInfo.innerHTML = infoText;
+                    planetDetails.appendChild(planetInfo);
+                }
+            });
+        
+            contextWindow.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function hideContextWindow() {
+            const contextWindow = document.getElementById('contextWindow');
+            const overlay = document.getElementById('overlay');
+            contextWindow.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        function downloadPlanetDetails() {
+            const planetDetails = document.getElementById('planetDetails');
+            let textContent = 'Planet Details Report\n\n';
+            
+            const planetInfos = planetDetails.getElementsByClassName('planet-info');
+            Array.from(planetInfos).forEach(planetInfo => {
+                const text = planetInfo.textContent.trim()
+                    .replace(/\n+/g, '\n')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                textContent += text + '\n\n';
+            });
+
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'planet_details.txt';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
     </script>
 </body>
 </html>
