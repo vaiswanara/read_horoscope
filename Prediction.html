@@ -74,7 +74,7 @@
             margin: 20px auto;
             overflow-x: auto;
             text-align: center;
-            background-color: white;
+            background-color: rgb(250, 249, 248);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border-radius: 12px;
         }
@@ -86,14 +86,6 @@
             font-size: 1.1em;
         }
 
-        th {
-            background-color: #1a237e;
-            color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.95em;
-        }
 
         tr:nth-child(even) {
             background-color: #f8f9fa;
@@ -264,11 +256,16 @@
             }
 
             table {
-                background-color: #1e1e1e;
+                background-color: #ca2727;
             }
 
             th {
-                background-color: #2c3e50;
+                background-color: #33245e;  /* Keep the original dark theme color */
+                color: white;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-size: 0.95em;
             }
 
             td {
@@ -310,11 +307,10 @@
         <a href="https://vaiswanara.com">
             <img src="logo.jpeg" alt="Logo" class="logo">
         </a>
-        <a href="https://vaiswanara.com" class="home-button">HOME</a>
-        <button onclick="window.location.href='Prediction.html'" class="home-button">Analyze</button>
+        <a href="index.html" class="home-button">MAIN</a>
     </div>
 
-    <h1>Graha Role Mapping Sheet</h1>
+    <h1>Analyze...</h1>
     <table id="planetTable">
         <tr>
             <th>GRAHA</th>
@@ -385,7 +381,28 @@
             let conjunctions = [];
             allSelects.forEach((select, index) => {
                 if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '' && planets[index] !== 'Lagna') {
-                    conjunctions.push(planets[index]);
+                    let planetName = planets[index];
+                    
+                    // Add symbols based on planet type
+                    if (planetName === 'Gu' || planetName === 'Sk') {
+                        planetName += '(+)';
+                    } else if (['Sa', 'Ku', 'Ra', 'Ke', 'Su'].includes(planetName)) {
+                        planetName += '(-)';
+                    } else if (planetName === 'Bu') {
+                        // Check if Bu is with Gu or Sk
+                        let hasGuOrSk = false;
+                        allSelects.forEach((innerSelect, innerIndex) => {
+                            if (innerIndex !== index && innerSelect.value === rashiNumber) {
+                                const innerPlanet = planets[innerIndex];
+                                if (innerPlanet === 'Gu' || innerPlanet === 'Sk') {
+                                    hasGuOrSk = true;
+                                }
+                            }
+                        });
+                        planetName += hasGuOrSk ? '(+)' : '(-)';
+                    }
+                    
+                    conjunctions.push(planetName);
                 }
             });
             return conjunctions.join(', ');
@@ -488,8 +505,29 @@
             allSelects.forEach((select, index) => {
                 if (index !== planetIndex && select.value !== '') {
                     const aspectType = calculateAspects(rashiNumber, index, select.value);
-                    if (aspectType && planets[index] !== 'Lagna') {  // Only add if not Lagna
-                        aspects.push(`${planets[index]}(${aspectType})`);
+                    if (aspectType && planets[index] !== 'Lagna') {
+                        let planetName = planets[index];
+                        
+                        // Add symbols based on planet type
+                        if (planetName === 'Gu' || planetName === 'Sk') {
+                            planetName += '(+)';
+                        } else if (['Sa', 'Ku', 'Ra', 'Ke', 'Su'].includes(planetName)) {
+                            planetName += '(-)';
+                        } else if (planetName === 'Bu') {
+                            // Check if Bu is aspected by Gu or Sk
+                            let hasGuOrSkAspect = false;
+                            allSelects.forEach((innerSelect, innerIndex) => {
+                                if (innerIndex !== index && innerSelect.value !== '') {
+                                    const innerAspect = calculateAspects(rashiNumber, innerIndex, innerSelect.value);
+                                    if (innerAspect && (planets[innerIndex] === 'Gu' || planets[innerIndex] === 'Sk')) {
+                                        hasGuOrSkAspect = true;
+                                    }
+                                }
+                            });
+                            planetName += hasGuOrSkAspect ? '(+)' : '(-)';
+                        }
+                        
+                        aspects.push(planetName); // Removed aspectType from output
                     }
                 }
             });
@@ -517,8 +555,19 @@
                     
                     // Update house numbers in table
                     const houseCell = select.parentNode.parentNode.cells[4];
-                    houseCell.textContent = index === 0 ? '1' : calculateHouseNumber(rashiNumber, lagnaRashiNumber);
+                    const houseNumber = index === 0 ? '1' : calculateHouseNumber(rashiNumber, lagnaRashiNumber);
                     
+                    // Add symbols based on house number
+                    let symbol = '';
+                    if (['1', '4', '5', '7', '9', '10'].includes(houseNumber)) {
+                        symbol = '(+)';
+                    } else if (['6', '8', '12'].includes(houseNumber)) {
+                        symbol = '(-)';
+                    } else if (['2', '3', '11'].includes(houseNumber)) {
+                        symbol = '(N)';
+                    }
+                    
+                    houseCell.textContent = houseNumber + symbol;
                     // Update lordship (this needs to be updated for all planets when Lagna changes)
                     const lordshipCell = select.parentNode.parentNode.cells[2];
                     lordshipCell.textContent = getLordship(planetName, lagnaRashiNumber);
