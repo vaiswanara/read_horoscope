@@ -86,7 +86,6 @@
             font-size: 1.1em;
         }
 
-
         tr:nth-child(even) {
             background-color: #f8f9fa;
         }
@@ -95,6 +94,13 @@
             background-color: #e8eaf6;
             transition: background-color 0.3s ease;
         }
+        
+        /* Compound Relationship Styles */
+        .compound-friend { background-color: #d4edda; color: #155724; }
+        .compound-enemy { background-color: #f8d7da; color: #721c24; }
+        .compound-neutral { background-color: #e2e3e5; color: #383d41; }
+        .compound-excellent { background-color: #c3e6cb; font-weight: bold; }
+        .compound-bitter { background-color: #f5c6cb; font-weight: bold; }
         
         /* Rashi Chart Styles */
         .rashi-chart {
@@ -316,10 +322,12 @@
             <th>GRAHA</th>
             <th>Rashi</th>
             <th>ADHIPATHYA</th>
+            <th>STRENGTH</th>
             <th style="display: none;">Rashi Number</th>
             <th>STHAANA</th>
             <th>SAMYOGA</th>
             <th>DRUSTI</th>
+            <th>P.MAITRI</th>
         </tr>
     </table>
 
@@ -343,6 +351,22 @@
         const planets = ['Lagna', 'Su', 'Ch', 'Ku', 'Bu', 'Gu', 'Sk', 'Sa', 'Ra', 'Ke'];
         const rashis = ['Mesha', 'Vrushabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrushchika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
         
+        // Rashi lordship mapping
+        const rashiLords = {
+            '1': 'Ku',  // Mesha - Kuja
+            '2': 'Sk',  // Vrushabha - Shukra
+            '3': 'Bu',  // Mithuna - Budha
+            '4': 'Ch',  // Karka - Chandra
+            '5': 'Su',  // Simha - Surya
+            '6': 'Bu',  // Kanya - Budha
+            '7': 'Sk',  // Tula - Shukra
+            '8': 'Ku',  // Vrushchika - Kuja
+            '9': 'Gu',  // Dhanu - Guru
+            '10': 'Sa', // Makara - Shani
+            '11': 'Sa', // Kumbha - Shani
+            '12': 'Gu'  // Meena - Guru
+        };
+        
         const lordshipData = {
             "1": { "Su": "5", "Ch": "4", "Ku": "1,8", "Bu": "3,6", "Gu": "9,12", "Sk": "2,7", "Sa": "10,11" },
             "2": { "Su": "4", "Ch": "3", "Ku": "7,12", "Bu": "2,5", "Gu": "8,11", "Sk": "1,6", "Sa": "9,10" },
@@ -356,6 +380,55 @@
             "10": { "Su": "8", "Ch": "7", "Ku": "4,11", "Bu": "6,9", "Gu": "3,12", "Sk": "5,10", "Sa": "1,2" },
             "11": { "Su": "7", "Ch": "6", "Ku": "3,10", "Bu": "5,8", "Gu": "2,11", "Sk": "4,9", "Sa": "12,1" },
             "12": { "Su": "6", "Ch": "5", "Ku": "2,9", "Bu": "4,7", "Gu": "1,10", "Sk": "3,8", "Sa": "11,12" }
+        };
+
+        // Updated Natural Relationships for Sanskrit planet names with neutral planets
+        const naturalRelationships = {
+            'Su': { 
+                friends: ['Ch', 'Ku', 'Gu'], 
+                enemies: ['Sk', 'Sa'],
+                neutral: ['Bu', 'Ra', 'Ke'] 
+            },
+            'Ch': { 
+                friends: ['Su', 'Bu'], 
+                enemies: [],
+                neutral: ['Gu', 'Ra', 'Ke', 'sk', 'sa', 'ku'] 
+            },
+            'Ku': { 
+                friends: ['Su', 'Ch', 'Gu'], 
+                enemies: ['Bu', 'Sk', 'Sa'],
+                neutral: ['Ra', 'Ke'] 
+            },
+            'Bu': { 
+                friends: ['Su', 'Sk'], 
+                enemies: ['Ch', 'Ku'],
+                neutral: ['Gu', 'Sa', 'Ra', 'Ke'] 
+            },
+            'Gu': { 
+                friends: ['Su', 'Ch', 'Ku'], 
+                enemies: ['Bu', 'Sk'],
+                neutral: ['Sa', 'Ra', 'Ke'] 
+            },
+            'Sk': { 
+                friends: ['Bu', 'Sa'], 
+                enemies: ['Su', 'Ch', 'Ku'],
+                neutral: ['Gu', 'Ra', 'Ke'] 
+            },
+            'Sa': { 
+                friends: ['Bu', 'Sk'], 
+                enemies: ['Su', 'Ch', 'Ku'],
+                neutral: ['Gu', 'Ra', 'Ke'] 
+            },
+            'Ra': { 
+                friends: ['Sa', 'Sk'], 
+                enemies: ['Su', 'Ch', 'Ku'],
+                neutral: ['Bu', 'Gu', 'Ke'] 
+            },
+            'Ke': { 
+                friends: ['Ku', 'Gu'], 
+                enemies: ['Su', 'Ch'],
+                neutral: ['Bu', 'Sk', 'Sa', 'Ra'] 
+            }
         };
 
         // Function to get lordship based on lagna rashi
@@ -430,17 +503,21 @@
 
             // Update conjunctions
             selects.forEach((select, index) => {
-                const conjunctionCell = select.parentNode.parentNode.cells[3];
+                // cell indices: 0=planet,1=rashi,2=adhipathya,3=strength,4=rashiNumber(hidden),5=sthaana,6=samyoga,7=drusti,8=compound
+                const conjunctionCell = select.parentNode.parentNode.cells[6];
                 const rashiNumber = select.value;
                 conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
             });
 
             // Update aspects
             selects.forEach((select, index) => {
-                const aspectCell = select.parentNode.parentNode.cells[4];
+                const aspectCell = select.parentNode.parentNode.cells[7];
                 const rashiNumber = select.value;
                 aspectCell.textContent = findAspects(index, rashiNumber, selects);
             });
+
+            // Update compound relationships
+            updateCompoundRelationships();
         }
         
         // Function to calculate aspects for a planet
@@ -554,7 +631,8 @@
                     box.textContent = box.textContent ? box.textContent + ', ' + planetName : planetName;
                     
                     // Update house numbers in table
-                    const houseCell = select.parentNode.parentNode.cells[4];
+                    const strengthCell = select.parentNode.parentNode.cells[3];
+                    const houseCell = select.parentNode.parentNode.cells[5];
                     const houseNumber = index === 0 ? '1' : calculateHouseNumber(rashiNumber, lagnaRashiNumber);
                     
                     // Add symbols based on house number
@@ -568,17 +646,178 @@
                     }
                     
                     houseCell.textContent = houseNumber + symbol;
+
+                    // Determine strength (Exaltation/Debilitation/Own House)
+                    const planetStrength = determineStrength(planetName, parseInt(rashiNumber));
+                    strengthCell.textContent = planetStrength;
                     // Update lordship (this needs to be updated for all planets when Lagna changes)
                     const lordshipCell = select.parentNode.parentNode.cells[2];
                     lordshipCell.textContent = getLordship(planetName, lagnaRashiNumber);
                     
                     // Update conjunctions
-                    const conjunctionCell = select.parentNode.parentNode.cells[5];
+                    const conjunctionCell = select.parentNode.parentNode.cells[6];
                     conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
                     
                     // Update aspects
-                    const aspectCell = select.parentNode.parentNode.cells[6];
+                    const aspectCell = select.parentNode.parentNode.cells[7];
                     aspectCell.textContent = findAspects(index, rashiNumber, selects);
+                }
+            });
+
+            // Update compound relationships
+            updateCompoundRelationships();
+        }
+
+        // Load planet strength data from JSON file (with fallback to embedded data)
+        let planetStrengthData = null;
+        async function loadPlanetStrengthData() {
+            try {
+                const resp = await fetch('planet_strength.json');
+                if (!resp.ok) throw new Error('Network response was not ok');
+                const data = await resp.json();
+                planetStrengthData = {};
+                data.forEach(item => { planetStrengthData[item.Planet] = item; });
+            } catch (e) {
+                // Fallback: embed the JSON directly if fetch fails
+                console.warn('Failed to load planet_strength.json, using embedded fallback. Error:', e);
+                const fallback = [
+  { "Planet": "Su", "Exaltation": 1, "Deblitation": 7, "Own_house1": 5, "Own_house2": 0 },
+  { "Planet": "Ch", "Exaltation": 2, "Deblitation": 8, "Own_house1": 4, "Own_house2": 0 },
+  { "Planet": "Ku", "Exaltation": 10, "Deblitation": 4, "Own_house1": 1, "Own_house2": 8 },
+  { "Planet": "Bu", "Exaltation": 6, "Deblitation": 12, "Own_house1": 3, "Own_house2": 6 },
+  { "Planet": "Gu", "Exaltation": 4, "Deblitation": 10, "Own_house1": 9, "Own_house2": 12 },
+  { "Planet": "Sk", "Exaltation": 12, "Deblitation": 6, "Own_house1": 2, "Own_house2": 7 },
+  { "Planet": "Sa", "Exaltation": 7, "Deblitation": 1, "Own_house1": 10, "Own_house2": 11 },
+  { "Planet": "Ra", "Exaltation": 3, "Deblitation": 9, "Own_house1": 0, "Own_house2": 0 },
+  { "Planet": "Ke", "Exaltation": 9, "Deblitation": 3, "Own_house1": 0, "Own_house2": 0 }
+];
+                planetStrengthData = {};
+                fallback.forEach(item => { planetStrengthData[item.Planet] = item; });
+            }
+        }
+
+        // Determine strength label for a planet at a given rashi number
+        function determineStrength(planetCode, rashiNumber) {
+            if (!planetStrengthData || !planetStrengthData[planetCode] || !rashiNumber) return '';
+            const info = planetStrengthData[planetCode];
+            const parts = [];
+            if (info.Exaltation === rashiNumber) parts.push('Exaltation');
+            if (info.Deblitation === rashiNumber) parts.push('Debilitation');
+            if (info.Own_house1 === rashiNumber) parts.push('Own House1');
+            if (info.Own_house2 === rashiNumber) parts.push('Own House2');
+            return parts.join(', ');
+        }
+
+        // COMPOUND RELATIONSHIP FUNCTIONS - UPDATED WITH MATRIX APPROACH
+        function getHouseDistance(house1, house2) {
+            if (!house1 || !house2) return 0;
+            let distance = Math.abs(house2 - house1);
+            if (distance > 6) {
+                distance = 12 - distance;
+            }
+            return distance + 1;
+        }
+
+        function getTemporaryRelationship(house1, house2) {
+            const friendlyHouses = [2, 3, 4, 10, 11, 12];
+            const enemyHouses = [1, 5, 6, 7, 8, 9];
+            const housePosition = getHouseDistance(house1, house2);
+            
+            if (friendlyHouses.includes(housePosition)) return 'friend';
+            if (enemyHouses.includes(housePosition)) return 'enemy';
+            return 'neutral';
+        }
+
+        function getNaturalRelationship(planet1, planet2) {
+            if (planet1 === planet2) return 'neutral';
+            if (!naturalRelationships[planet1]) return 'neutral';
+            
+            const rel1 = naturalRelationships[planet1];
+            if (rel1.friends.includes(planet2)) return 'friend';
+            if (rel1.enemies.includes(planet2)) return 'enemy';
+            if (rel1.neutral.includes(planet2)) return 'neutral';
+            return 'neutral';
+        }
+
+        // NEW: Compound relationship matrix based on your table
+        function getFinalRelationship(naturalRel, tempRel) {
+            const relationshipMatrix = {
+                'friend': {
+                    'friend': { text: 'Best Friend', class: 'compound-excellent' },
+                    'neutral': { text: 'Friend', class: 'compound-friend' },
+                    'enemy': { text: 'Neutral', class: 'compound-neutral' }
+                },
+                'neutral': {
+                    'friend': { text: 'Friend', class: 'compound-friend' },
+                    'neutral': { text: 'Neutral', class: 'compound-neutral' },
+                    'enemy': { text: 'Enemy', class: 'compound-enemy' }
+                },
+                'enemy': {
+                    'friend': { text: 'Neutral', class: 'compound-neutral' },
+                    'neutral': { text: 'Enemy', class: 'compound-enemy' },
+                    'enemy': { text: 'Bitter Enemy', class: 'compound-bitter' }
+                }
+            };
+            
+            return relationshipMatrix[naturalRel][tempRel];
+        }
+
+        // Function to get rashi lord's position
+        function getRashiLordPosition(rashiLord, allSelects) {
+            for (let i = 0; i < planets.length; i++) {
+                if (planets[i] === rashiLord && allSelects[i].value) {
+                    return parseInt(allSelects[i].value);
+                }
+            }
+            return null;
+        }
+
+        // Function to calculate relationship with rashi lord only
+        function calculatePlanetRashiLordRelationship(planetIndex, allSelects) {
+            const currentPlanet = planets[planetIndex];
+            const currentHouse = allSelects[planetIndex].value;
+            
+            if (!currentHouse || currentPlanet === 'Lagna') return null;
+            
+            // Get the rashi lord for the current planet's position
+            const rashiLord = rashiLords[currentHouse];
+            if (!rashiLord) return null;
+            
+            // Get the rashi lord's position
+            const rashiLordPosition = getRashiLordPosition(rashiLord, allSelects);
+            if (!rashiLordPosition) return null;
+            
+            // Calculate relationship using the new matrix approach
+            const naturalRel = getNaturalRelationship(currentPlanet, rashiLord);
+            const tempRel = getTemporaryRelationship(parseInt(currentHouse), rashiLordPosition);
+            const relationship = getFinalRelationship(naturalRel, tempRel);
+            
+            return {
+                rashiLord: rashiLord,
+                relationship: relationship.text,
+                class: relationship.class
+            };
+        }
+
+        // Function to update compound relationships for all planets
+        function updateCompoundRelationships() {
+            const selects = document.querySelectorAll('select');
+            
+            selects.forEach((select, index) => {
+                const compoundCell = select.parentNode.parentNode.cells[8]; // 8th column for compound relationships
+                if (planets[index] === 'Lagna') {
+                    compoundCell.innerHTML = '';
+                    compoundCell.className = '';
+                    return;
+                }
+                
+                const relationship = calculatePlanetRashiLordRelationship(index, selects);
+                if (relationship) {
+                    compoundCell.innerHTML = `${relationship.rashiLord}: ${relationship.relationship}`;
+                    compoundCell.className = relationship.class;
+                } else {
+                    compoundCell.innerHTML = '';
+                    compoundCell.className = '';
                 }
             });
         }
@@ -599,6 +838,9 @@
             // Add Lordship cell (moved up)
             const lordshipCell = row.insertCell();
             
+            // Strength cell
+            const strengthCell = row.insertCell();
+            
             // Rashi number cell (hidden)
             const numberCell = row.insertCell();
             numberCell.style.display = 'none';  // Hide the cell
@@ -612,6 +854,9 @@
             // Aspect cell
             const aspectCell = row.insertCell();
             
+            // Compound Relationship cell
+            const compoundCell = row.insertCell();
+            
             select.addEventListener('change', (e) => {
                 numberCell.textContent = e.target.value;
                 updateChart();
@@ -619,6 +864,11 @@
             
             rashiCell.appendChild(select);
         });
+
+    // Load planet strength data on startup
+    loadPlanetStrengthData().then(() => {
+        updateCompoundRelationships(); // Initialize compound relationships
+    });
     </script>
 
     <!-- Read Button -->
@@ -714,11 +964,13 @@
                 const row = select.parentNode.parentNode;
                 const rashiValue = select.value ? rashis[parseInt(select.value) - 1] : '';
                 const adhipathya = row.cells[2].textContent;
-                const sthaana = row.cells[4].textContent;
-                const samyoga = row.cells[5].textContent;
-                const drusti = row.cells[6].textContent;
+                const strength = row.cells[3].textContent;
+                const sthaana = row.cells[5].textContent;
+                const samyoga = row.cells[6].textContent;
+                const drusti = row.cells[7].textContent;
+                const compoundRel = row.cells[8].textContent;
         
-                if ((rashiValue || adhipathya || sthaana || samyoga || drusti) && planet !== 'Lagna') {
+                if ((rashiValue || adhipathya || sthaana || samyoga || drusti || compoundRel) && planet !== 'Lagna') {
                     const planetInfo = document.createElement('div');
                     planetInfo.className = 'planet-info';
                     
@@ -728,6 +980,10 @@
                         infoText += `${adhipathya} Lord ${planet}`;
                     } else {
                         infoText += planet;
+                    }
+                    
+                    if (strength) {
+                        infoText += ` (${strength})`;
                     }
                     
                     if (sthaana) {
@@ -740,6 +996,10 @@
                     
                     if (drusti) {
                         infoText += `. aspected by ${drusti}`;
+                    }
+
+                    if (compoundRel) {
+                        infoText += `. Relationship with Rashi Lord: ${compoundRel}`;
                     }
                     
                     infoText += '.</p>';
