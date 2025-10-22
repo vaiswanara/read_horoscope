@@ -364,7 +364,7 @@
     <h1>Analyze...</h1>
     <div class="top-row">
         <div class="left-col">
-            <label for="positionsInput">Planet positions (lagna, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke):</label>
+            <label for="positionsInput">Planet positions (Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke):</label>
             <input id="positionsInput" type="text" style="width:100%;max-width:675px;padding:8px;margin-top:8px;" placeholder="2,11.8.6.10.7.10.6.3.9">
             <div style="margin-top:8px;">
                 <button id="applyPositionsBtn" style="padding:8px 14px;background:#1a237e;color:#fff;border:none;border-radius:6px;cursor:pointer;">Apply Positions</button>
@@ -388,7 +388,7 @@
             </div>
         </div>
     </div>
-    <!-- Top table: Lagna, Sthaana Bhala, Karaka, Adhipatya Bhala -->
+    <!-- Top table: Lg, Sthaana Bhala, Karaka, Adhipatya Bhala -->
     <table id="topTable">
         <tr>
             <th>GRAHA</th>
@@ -421,7 +421,7 @@
     <!-- rashi-chart moved to top-row -->
 
     <script>
-        const planets = ['Lagna', 'Su', 'Ch', 'Ku', 'Bu', 'Gu', 'Sk', 'Sa', 'Ra', 'Ke'];
+        const planets = ['Lg', 'Su', 'Ch', 'Ku', 'Bu', 'Gu', 'Sk', 'Sa', 'Ra', 'Ke'];
         const rashis = ['Mesha', 'Vrushabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrushchika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
         
         // Rashi lordship mapping
@@ -504,21 +504,21 @@
             }
         };
 
-        // Function to get lordship based on lagna rashi
+        // Function to get lordship based on Lg rashi
         function getLordship(planetName, lagnaRashi) {
-            if (!lagnaRashi || planetName === 'Lagna' || planetName === 'Ra' || planetName === 'Ke') return '';
+            if (!lagnaRashi || planetName === 'Lg' || planetName === 'Ra' || planetName === 'Ke') return '';
             return lordshipData[lagnaRashi][planetName] || '';
         }
 
         const topTable = document.getElementById('topTable');
         const planetTable = document.getElementById('planetTable');
 
-        // Helper: return planet selects in the defined planets[] order (Lagna first)
+        // Helper: return planet selects in the defined planets[] order (Lg first)
         function getPlanetSelectsOrdered() {
             return planets.map(p => document.querySelector(`select[data-planet="${p}"]`));
         }
         
-        // Function to calculate house number from Lagna
+        // Function to calculate house number from Lg
         function calculateHouseNumber(planetRashiNumber, lagnaRashiNumber) {
             if (!planetRashiNumber || !lagnaRashiNumber) return '';
             if (planetRashiNumber === lagnaRashiNumber) return '1';
@@ -532,7 +532,7 @@
         function findConjunctions(planetIndex, rashiNumber, allSelects) {
             let conjunctions = [];
             allSelects.forEach((select, index) => {
-                if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '' && planets[index] !== 'Lagna') {
+                if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '' && planets[index] !== 'Lg') {
                     let planetName = planets[index];
                     
                     // Add symbols based on planet type
@@ -617,8 +617,8 @@
             const aspectingPlanetName = planets[aspectingPlanet];
             let aspects = [];
             
-            // Check 7th aspect for all planets except Lagna
-            if (aspectingPlanetName !== 'Lagna') {
+            // Check 7th aspect for all planets except Lg
+            if (aspectingPlanetName !== 'Lg') {
                 let seventhHouse = source + 6;
                 if (seventhHouse > 12) seventhHouse -= 12;
                 if (target === seventhHouse) aspects.push("7th");
@@ -668,7 +668,7 @@
             allSelects.forEach((select, index) => {
                 if (index !== planetIndex && select.value !== '') {
                     const aspectType = calculateAspects(rashiNumber, index, select.value);
-                    if (aspectType && planets[index] !== 'Lagna') {
+                    if (aspectType && planets[index] !== 'Lg') {
                         let planetName = planets[index];
                         
                         // Add symbols based on planet type
@@ -705,7 +705,7 @@
             }
             
             const selects = getPlanetSelectsOrdered();
-            const lagnaRashiNumber = selects[0] ? selects[0].value : ''; // Get Lagna's rashi number
+            const lagnaRashiNumber = selects[0] ? selects[0].value : ''; // Get Lg's rashi number
             
             // Update chart and calculations
             selects.forEach((select, index) => {
@@ -718,7 +718,7 @@
 
                     const row = select.parentNode.parentNode;
 
-                    // If this is the Lagna row (index 0) show ONLY Samyoga and Drusti; clear other cells
+                    // If this is the Lg row (index 0) show ONLY Samyoga and Drusti; clear other cells
                     if (index === 0) {
                         // clear adhipathya, strength, house, compound
                         if (row.cells[2]) row.cells[2].textContent = '';
@@ -882,7 +882,7 @@
             const currentPlanet = planets[planetIndex];
             const currentHouse = allSelects[planetIndex].value;
             
-            if (!currentHouse || currentPlanet === 'Lagna') return null;
+            if (!currentHouse || currentPlanet === 'Lg') return null;
             
             // Get the rashi lord for the current planet's position
             const rashiLord = rashiLords[currentHouse];
@@ -910,7 +910,7 @@
             
             selects.forEach((select, index) => {
                 const compoundCell = select.parentNode.parentNode.cells[8]; // 8th column for compound relationships
-                if (planets[index] === 'Lagna') {
+                if (planets[index] === 'Lg') {
                     compoundCell.innerHTML = '';
                     compoundCell.className = '';
                     return;
@@ -928,8 +928,8 @@
         }
 
         planets.forEach(planet => {
-            // insert Lagna into topTable, others into planetTable
-            const row = (planet === 'Lagna') ? topTable.insertRow() : planetTable.insertRow();
+            // insert Lg into topTable, others into planetTable
+            const row = (planet === 'Lg') ? topTable.insertRow() : planetTable.insertRow();
             
             // Planet name cell
             const planetCell = row.insertCell();
@@ -980,11 +980,11 @@
             rashiCell.appendChild(select);
         });
 
-    // Insert a "Sthaana Bhala" row into topTable (after Lagna)
+    // Insert a "Sthaana Bhala" row into topTable (after Lg)
         (function createLordRow(){
-            // find Lagna row index in topTable
+            // find Lg row index in topTable
             const rows = Array.from(topTable.rows);
-            const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lagna');
+            const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lg');
             const insertIndex = lagnaIndex >= 0 ? lagnaIndex + 1 : topTable.rows.length;
             const lordRow = topTable.insertRow(insertIndex);
 
@@ -1017,7 +1017,7 @@
             const lordCompoundCell = lordRow.insertCell();
 
             function updateLordRow() {
-                // Get current Lagna rashi (from ordered planet selects)
+                // Get current Lg rashi (from ordered planet selects)
                 const selects = getPlanetSelectsOrdered();
                 const lagnaSelect = selects[0];
                 const lagnaRashi = lagnaSelect ? lagnaSelect.value : '';
@@ -1036,7 +1036,7 @@
                     return;
                 }
 
-                // Calculate target rashi number: lagna + (house - 1)
+                // Calculate target rashi number: Lg + (house - 1)
                 let target = parseInt(lagnaRashi, 10) + parseInt(selectedHouse, 10) - 1;
                 if (target > 12) target -= 12;
 
@@ -1052,7 +1052,7 @@
                 // Samyoga: planets posited in that rashi (occupants)
                 const occupants = [];
                 selects.forEach((sel, idx) => {
-                    if (sel && sel.value && parseInt(sel.value,10) === target && planets[idx] !== 'Lagna') {
+                    if (sel && sel.value && parseInt(sel.value,10) === target && planets[idx] !== 'Lg') {
                         occupants.push(planets[idx]);
                     }
                 });
@@ -1061,7 +1061,7 @@
                 // Drusti: which planets aspect this target rashi
                 const aspectors = [];
                 selects.forEach((sel, idx) => {
-                    if (idx === 0) return; // skip Lagna as an aspecting planet
+                    if (idx === 0) return; // skip Lg as an aspecting planet
                     if (!sel.value) return;
                     const aspectType = calculateAspects(String(target), idx, sel.value);
                     if (aspectType) {
@@ -1085,7 +1085,7 @@
                 lordAspectCell.textContent = aspectors.join(', ');
             }
 
-            // Wire updates: when Lagna or positions change, refresh Lord row
+            // Wire updates: when Lg or positions change, refresh Lord row
             lordSelect.addEventListener('change', updateLordRow);
 
             // Also refresh when DOMContent loaded and after initial positions applied
@@ -1098,9 +1098,9 @@
 
     // Insert Karaka and Adhipatya Bhala rows into topTable after Sthaana Bhala
         (function createKarakaRows(){
-            // find Lagna row index and Lord row index to position Karaka rows afterwards
+            // find Lg row index and Lord row index to position Karaka rows afterwards
             const rows = Array.from(topTable.rows);
-            const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lagna');
+            const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lg');
             const lordIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Sthaana Bhala');
             const baseIndex = (lordIndex >= 0) ? lordIndex + 1 : (lagnaIndex >= 0 ? lagnaIndex + 1 : topTable.rows.length);
 
@@ -1222,7 +1222,7 @@
         // allow commas, dots or spaces as separators
         const parts = raw.split(/[.,\s]+/).map(s => s.trim()).filter(Boolean);
         if (parts.length < planets.length) {
-            alert('Please provide positions for all planets: lagna, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke');
+            alert('Please provide positions for all planets: Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke');
             return;
         }
 
@@ -1356,7 +1356,7 @@
                 const drusti = row.cells[7].textContent;
                 const compoundRel = row.cells[8].textContent;
         
-                if ((rashiValue || adhipathya || sthaana || samyoga || drusti || compoundRel) && planet !== 'Lagna') {
+                if ((rashiValue || adhipathya || sthaana || samyoga || drusti || compoundRel) && planet !== 'Lg') {
                     const planetInfo = document.createElement('div');
                     planetInfo.className = 'planet-info';
                     
