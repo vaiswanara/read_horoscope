@@ -915,14 +915,22 @@
                     compoundCell.className = '';
                     return;
                 }
-                
-                const relationship = calculatePlanetRashiLordRelationship(index, selects);
-                if (relationship) {
-                    compoundCell.innerHTML = `${relationship.rashiLord}: ${relationship.relationship}`;
-                    compoundCell.className = relationship.class;
-                } else {
-                    compoundCell.innerHTML = '';
+
+                const strengthCell = select.parentNode.parentNode.cells[3];
+                const strengthText = strengthCell.textContent;
+
+                if (strengthText.includes('Own House1') || strengthText.includes('Own House2')) {
+                    compoundCell.innerHTML = 'Own House';
                     compoundCell.className = '';
+                } else {
+                    const relationship = calculatePlanetRashiLordRelationship(index, selects);
+                    if (relationship) {
+                        compoundCell.innerHTML = `${relationship.rashiLord}: ${relationship.relationship}`;
+                        compoundCell.className = relationship.class;
+                    } else {
+                        compoundCell.innerHTML = '';
+                        compoundCell.className = '';
+                    }
                 }
             });
         }
