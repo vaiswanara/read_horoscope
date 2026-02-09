@@ -2,382 +2,496 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graha Role Mapping Sheet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a237e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Analyze - Graha Role Mapping</title>
     <style>
-        /* Logo and Home Button Styles */
-        .logo-container {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-        }
-
-        .logo {
-            width: 100px;
-            height: auto;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .home-button {
-            padding: 10px 20px;
-            background-color: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-            text-align: center;
-        }
-
-        .home-button:hover {
-            background-color: #283593;
-        }
-
-        /* Adjust existing body padding to accommodate logo */
-        body {
-            padding-top: 160px;
-            margin: 0;
-            padding: 20px;
+        * {
             box-sizing: border-box;
-            font-size: 20px;  /* Increased base font size by 25% from 16px to 20px */
-            background-color: #f0f2f5;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            line-height: 1.6;
+            -webkit-tap-highlight-color: transparent;
         }
-        
-        h1 {
-            text-align: center;
-            color: #1a237e;
-            font-size: 2.5em;  /* Increased by 25% from 2em to 2.5em */
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.1rem;
             font-weight: 600;
         }
-        
-        table {
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto;
-            overflow-x: auto;
-            text-align: center;
-            background-color: rgb(250, 249, 248);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 12px;
+
+        .nav-btn {
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s;
         }
-        
-        th, td {
-            border: 1px solid #e0e0e0;
-            padding: 15px;
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 12px;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .input-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .positions-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .positions-input:focus {
+            outline: none;
+            border-color: #1a237e;
+        }
+
+        .apply-btn {
+            padding: 10px 16px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .apply-btn:active {
+            opacity: 0.8;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a237e;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .rashi-chart {
+            width: 100%;
+            max-width: 280px;
+            aspect-ratio: 1;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1px;
+            padding: 1px;
+            background-color: #1a237e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .rashi-box {
+            background-color: white;
+            padding: 3px;
+            position: relative;
+            min-height: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.6rem;
+        }
+
+        .rashi-number {
+            display: none;
+        }
+
+        .planet-names {
+            font-size: 0.6rem;
             text-align: center;
-            font-size: 1.1em;
+            color: #1a237e;
+            word-wrap: break-word;
+            line-height: 1.2;
+            font-weight: 500;
+        }
+
+        .chart-title {
+            grid-column: 2 / 4;
+            grid-row: 2 / 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: white;
+            background-color: #1a237e;
+            border-radius: 4px;
+        }
+
+        /* Table Styles */
+        .table-section {
+            margin-bottom: 16px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.7rem;
+            min-width: 700px;
+        }
+
+        th {
+            background-color: #1a237e;
+            color: white;
+            font-weight: 600;
+            padding: 10px 4px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 0.6rem;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 8px 4px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
         }
 
         tr:nth-child(even) {
             background-color: #f8f9fa;
         }
 
-        tr:hover {
+        tr:active {
             background-color: #e8eaf6;
-            transition: background-color 0.3s ease;
-        }
-        
-        /* Compound Relationship Styles */
-        .compound-friend { background-color: #d4edda; color: #155724; }
-        .compound-enemy { background-color: #f8d7da; color: #721c24; }
-        .compound-neutral { background-color: #e2e3e5; color: #383d41; }
-        .compound-excellent { background-color: #c3e6cb; font-weight: bold; }
-        .compound-bitter { background-color: #f5c6cb; font-weight: bold; }
-        
-        /* Rashi Chart Styles */
-        .rashi-chart {
-            width: 100%;
-            max-width: 375px;
-            aspect-ratio: 1;
-            margin: 40px auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 2px;
-            padding: 2px;
-            background-color: #1a237e;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-            border-radius: 15px;
-            overflow: hidden;
         }
 
-        .rashi-box {
-            background-color: white;
-            padding: 15px;
-            position: relative;
-            min-height: 45px;
-            text-align: center;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            border-radius: 8px;
-        }
+        /* Compound relationship colors */
+        .compound-friend { background-color: #d4edda !important; color: #155724; }
+        .compound-enemy { background-color: #f8d7da !important; color: #721c24; }
+        .compound-neutral { background-color: #e2e3e5 !important; color: #383d41; }
+        .compound-excellent { background-color: #c3e6cb !important; font-weight: bold; }
+        .compound-bitter { background-color: #f5c6cb !important; font-weight: bold; }
 
-        .rashi-number {
-            display: none !important;  /* Add !important to ensure it's hidden */
-        }
-
-        .planet-names {
-            margin-top: 0;  /* Remove top margin since numbers are hidden */
-            font-size: 1.1em;
-            text-align: center;
-            color: #1a237e;
-            word-wrap: break-word;
-        }
-
-        .rashi-box:hover {
-            background-color: #e8eaf6;
-            transform: scale(1.02);
-        }
-
-        .rashi-number {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #1a237e;
-            background-color: rgba(255,255,255,0.9);
-            padding: 2px 6px;
-            border-radius: 4px;
-        }
-
-        .planet-names {
-            margin-top: 20px;
-            font-size: 1.1em;
-            text-align: center;
-            color: #1a237e;
-            word-wrap: break-word;
-        }
-
-        .chart-title {
-            text-align: center;
-            grid-column: 2 / 4;
-            grid-row: 2 / 4;
-            align-self: center;
-            justify-self: center;
-            font-weight: bold;
-            font-size: 1.6em;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            background-color: #1a237e;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
+        /* Select dropdown styling */
         select {
-            padding: 10px;
-            border-radius: 8px;
-            border: 2px solid #e0e0e0;
-            font-size: 1em;
+            padding: 5px 6px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 0.65rem;
             width: 100%;
-            max-width: 200px;
+            max-width: 70px;
             background-color: white;
-            color: #1a237e;
+            color: #333;
             cursor: pointer;
-            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 4px center;
+            padding-right: 16px;
         }
 
         select:focus {
             outline: none;
             border-color: #1a237e;
-            box-shadow: 0 0 8px rgba(26, 35, 126, 0.2);
         }
 
-        select:hover {
-            border-color: #1a237e;
+        .karaka-select, .lord-select {
+            max-width: 85px;
         }
 
-        /* Ensure Karaka selects are always visible and styled */
-        .karaka-select {
-            display: inline-block !important;
-            width: 180px !important;
-            max-width: 90% !important;
-            padding: 8px !important;
-            border-radius: 6px !important;
-            border: 2px solid #e0e0e0 !important;
-            background-color: white !important;
-            color: #1a237e !important;
-            box-shadow: none !important;
-        }
-
-        /* Enhanced Mobile Responsiveness */
-        @media screen and (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 2em;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            th, td {
-                min-width: 120px;
-                padding: 10px;
-                font-size: 0.9em;
-            }
-            
-            .rashi-chart {
-                max-width: 100%;
-                gap: 1px;
-            }
-            
-            .rashi-box {
-                padding: 10px;
-            }
-            
-            .planet-names {
-                font-size: 0.9em;
-                margin-top: 15px;
-            }
-            
-            .chart-title {
-                font-size: 1.2em;
-            }
-            
-            select {
-                max-width: 100%;
-                font-size: 0.9em;
-            }
-        }
-
-        /* Top row layout: left = input, right = south-indian chart */
-        .top-row {
+        /* Floating Action Button */
+        .fab-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            border: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.4);
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 10px auto;
-            gap: 20px;
-            padding: 0 10px;
-            box-sizing: border-box;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .left-col {
-            flex: 1 1 60%;
-            min-width: 260px;
-            display: flex;
+        .fab-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Context Window */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1999;
+            backdrop-filter: blur(2px);
+        }
+
+        .context-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 92%;
+            max-width: 400px;
+            max-height: 80vh;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            z-index: 2000;
+            overflow: hidden;
             flex-direction: column;
-            justify-content: flex-start;
-            align-items: flex-start;
         }
 
-        .right-col {
-            flex: 0 0 315px;
+        .context-header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 16px;
+        }
+
+        .context-header h2 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .context-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .planet-info {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #1a237e;
+        }
+
+        .planet-info h3 {
+            margin: 0 0 6px 0;
+            font-size: 0.9rem;
+            color: #1a237e;
+        }
+
+        .planet-info p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .context-footer {
+            padding: 12px 16px;
+            border-top: 1px solid #eee;
             display: flex;
-            justify-content: flex-end; /* align chart to the right */
+            gap: 10px;
         }
 
-        @media screen and (max-width: 768px) {
-            .top-row { flex-direction: column; align-items: stretch; }
-            .right-col { flex: 0 0 auto; justify-content: center; }
+        .context-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
 
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #121212;
-                color: #ffffff;
+        .context-btn:active {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: #1a237e;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        /* Tablet and larger screens */
+        @media screen and (min-width: 768px) {
+            .main-content {
+                padding: 20px;
+                max-width: 1200px;
+                margin: 0 auto;
+            }
+
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .input-section {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .input-label {
+                margin-bottom: 0;
+                white-space: nowrap;
+            }
+
+            .input-row {
+                flex: 1;
+                flex-wrap: nowrap;
+            }
+
+            .rashi-chart {
+                max-width: 350px;
+            }
+
+            .rashi-box {
+                padding: 6px;
+                font-size: 0.75rem;
+            }
+
+            .planet-names {
+                font-size: 0.75rem;
+            }
+
+            .chart-title {
+                font-size: 0.9rem;
             }
 
             table {
-                background-color: #ca2727;
+                font-size: 0.8rem;
+                min-width: auto;
             }
 
             th {
-                background-color: #33245e;  /* Keep the original dark theme color */
-                color: white;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                font-size: 0.95em;
+                padding: 12px 6px;
+                font-size: 0.7rem;
             }
 
             td {
-                border-color: #333;
-            }
-
-            tr:nth-child(even) {
-                background-color: #262626;
-            }
-
-            tr:hover {
-                background-color: #333;
-            }
-
-            .rashi-box {
-                background-color: #1e1e1e;
-                color: #ffffff;
-            }
-
-            .rashi-number, .planet-names {
-                color: #ffffff;
+                padding: 10px 6px;
             }
 
             select {
-                background-color: #1e1e1e;
-                color: #ffffff;
-                border-color: #333;
+                font-size: 0.75rem;
+                max-width: 100px;
             }
 
-            select:focus {
-                border-color: #4a5568;
+            .karaka-select, .lord-select {
+                max-width: 120px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Logo and Home Button Container -->
-    <div class="logo-container">
-        <a href="https://vaiswanara.com">
-            <img src="logo.jpeg" alt="Logo" class="logo">
-        </a>
-        <a href="index.html" class="home-button">MAIN</a>
-    </div>
-
-    <h1>Analyze...</h1>
-    <div class="top-row">
-        <div class="left-col">
-            <label for="positionsInput">Planet positions (Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke):</label>
-            <input id="positionsInput" type="text" style="width:100%;max-width:675px;padding:8px;margin-top:8px;" placeholder="2,11.8.6.10.7.10.6.3.9">
-            <div style="margin-top:8px;">
-                <button id="applyPositionsBtn" style="padding:8px 14px;background:#1a237e;color:#fff;border:none;border-radius:6px;cursor:pointer;">Apply Positions</button>
-            </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>Analyze</h1>
+            <a href="index.html" class="nav-btn">Main</a>
         </div>
-        <div class="right-col">
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Input Section -->
+        <section class="input-section">
+            <label class="input-label">Planet positions (Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke):</label>
+            <div class="input-row">
+                <input id="positionsInput" type="text" class="positions-input" placeholder="e.g., 2,11,8,6,10,7,10,6,3,9">
+                <button id="applyPositionsBtn" class="apply-btn">Apply</button>
+            </div>
+        </section>
+
+        <!-- Rashi Chart -->
+        <section class="chart-section">
+            <div class="section-title">Rashi Chakra</div>
             <div class="rashi-chart">
                 <div class="rashi-box"><span class="rashi-number">12</span><div class="planet-names" id="box12"></div></div>
                 <div class="rashi-box"><span class="rashi-number">1</span><div class="planet-names" id="box1"></div></div>
                 <div class="rashi-box"><span class="rashi-number">2</span><div class="planet-names" id="box2"></div></div>
                 <div class="rashi-box"><span class="rashi-number">3</span><div class="planet-names" id="box3"></div></div>
                 <div class="rashi-box"><span class="rashi-number">11</span><div class="planet-names" id="box11"></div></div>
-                <div class="chart-title" colspan="2" rowspan="2">Rashi Chakra</div>
+                <div class="chart-title">Rashi<br>Chakra</div>
                 <div class="rashi-box"><span class="rashi-number">4</span><div class="planet-names" id="box4"></div></div>
                 <div class="rashi-box"><span class="rashi-number">10</span><div class="planet-names" id="box10"></div></div>
                 <div class="rashi-box"><span class="rashi-number">5</span><div class="planet-names" id="box5"></div></div>
@@ -386,58 +500,72 @@
                 <div class="rashi-box"><span class="rashi-number">7</span><div class="planet-names" id="box7"></div></div>
                 <div class="rashi-box"><span class="rashi-number">6</span><div class="planet-names" id="box6"></div></div>
             </div>
+        </section>
+
+        <!-- Top Table -->
+        <section class="table-section">
+            <div class="section-title">Primary Analysis</div>
+            <div class="table-container">
+                <table id="topTable">
+                    <tr>
+                        <th>GRAHA</th>
+                        <th>Rashi</th>
+                        <th>ADHIPATHYA</th>
+                        <th>STRENGTH</th>
+                        <th style="display: none;">Rashi Number</th>
+                        <th>STHAANA</th>
+                        <th>SAMYOGA</th>
+                        <th>DRUSTI</th>
+                        <th>P.MAITRI</th>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- Bottom Table -->
+        <section class="table-section">
+            <div class="section-title">Planet Analysis</div>
+            <div class="table-container">
+                <table id="planetTable">
+                    <tr>
+                        <th>GRAHA</th>
+                        <th>Rashi</th>
+                        <th>ADHIPATHYA</th>
+                        <th>STRENGTH</th>
+                        <th style="display: none;">Rashi Number</th>
+                        <th>STHAANA</th>
+                        <th>SAMYOGA</th>
+                        <th>DRUSTI</th>
+                        <th>P.MAITRI</th>
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab-button" onclick="showContextWindow()">Read</button>
+
+    <!-- Context Window -->
+    <div class="overlay" id="overlay" onclick="hideContextWindow()"></div>
+    <div class="context-window" id="contextWindow" style="display: none;">
+        <div class="context-header">
+            <h2>Planet Details</h2>
+        </div>
+        <div class="context-body" id="planetDetails"></div>
+        <div class="context-footer">
+            <button class="context-btn btn-secondary" onclick="hideContextWindow()">Close</button>
+            <button class="context-btn btn-primary" onclick="downloadPlanetDetails()">Print</button>
         </div>
     </div>
-    <!-- Top table: Lg, Sthaana Bhala, Karaka, Adhipatya Bhala -->
-    <table id="topTable">
-        <tr>
-            <th>GRAHA</th>
-            <th>Rashi</th>
-            <th>ADHIPATHYA</th>
-            <th>STRENGTH</th>
-            <th style="display: none;">Rashi Number</th>
-            <th>STHAANA</th>
-            <th>SAMYOGA</th>
-            <th>DRUSTI</th>
-            <th>P.MAITRI</th>
-        </tr>
-    </table>
-
-    <!-- Bottom table: remaining planets -->
-    <table id="planetTable">
-        <tr>
-            <th>GRAHA</th>
-            <th>Rashi</th>
-            <th>ADHIPATHYA</th>
-            <th>STRENGTH</th>
-            <th style="display: none;">Rashi Number</th>
-            <th>STHAANA</th>
-            <th>SAMYOGA</th>
-            <th>DRUSTI</th>
-            <th>P.MAITRI</th>
-        </tr>
-    </table>
-
-    <!-- rashi-chart moved to top-row -->
 
     <script>
         const planets = ['Lg', 'Su', 'Ch', 'Ku', 'Bu', 'Gu', 'Sk', 'Sa', 'Ra', 'Ke'];
         const rashis = ['Mesha', 'Vrushabha', 'Mithuna', 'Karka', 'Simha', 'Kanya', 'Tula', 'Vrushchika', 'Dhanu', 'Makara', 'Kumbha', 'Meena'];
         
-        // Rashi lordship mapping
         const rashiLords = {
-            '1': 'Ku',  // Mesha - Kuja
-            '2': 'Sk',  // Vrushabha - Shukra
-            '3': 'Bu',  // Mithuna - Budha
-            '4': 'Ch',  // Karka - Chandra
-            '5': 'Su',  // Simha - Surya
-            '6': 'Bu',  // Kanya - Budha
-            '7': 'Sk',  // Tula - Shukra
-            '8': 'Ku',  // Vrushchika - Kuja
-            '9': 'Gu',  // Dhanu - Guru
-            '10': 'Sa', // Makara - Shani
-            '11': 'Sa', // Kumbha - Shani
-            '12': 'Gu'  // Meena - Guru
+            '1': 'Ku', '2': 'Sk', '3': 'Bu', '4': 'Ch', '5': 'Su', '6': 'Bu',
+            '7': 'Sk', '8': 'Ku', '9': 'Gu', '10': 'Sa', '11': 'Sa', '12': 'Gu'
         };
         
         const lordshipData = {
@@ -455,56 +583,18 @@
             "12": { "Su": "6", "Ch": "5", "Ku": "2,9", "Bu": "4,7", "Gu": "1,10", "Sk": "3,8", "Sa": "11,12" }
         };
 
-        // Updated Natural Relationships for Sanskrit planet names with neutral planets
         const naturalRelationships = {
-            'Su': { 
-                friends: ['Ch', 'Ku', 'Gu'], 
-                enemies: ['Sk', 'Sa'],
-                neutral: ['Bu', 'Ra', 'Ke'] 
-            },
-            'Ch': { 
-                friends: ['Su', 'Bu'], 
-                enemies: [],
-                neutral: ['Gu', 'Ra', 'Ke', 'sk', 'sa', 'ku'] 
-            },
-            'Ku': { 
-                friends: ['Su', 'Ch', 'Gu'], 
-                enemies: ['Bu', 'Sk', 'Sa'],
-                neutral: ['Ra', 'Ke'] 
-            },
-            'Bu': { 
-                friends: ['Su', 'Sk'], 
-                enemies: ['Ch', 'Ku'],
-                neutral: ['Gu', 'Sa', 'Ra', 'Ke'] 
-            },
-            'Gu': { 
-                friends: ['Su', 'Ch', 'Ku'], 
-                enemies: ['Bu', 'Sk'],
-                neutral: ['Sa', 'Ra', 'Ke'] 
-            },
-            'Sk': { 
-                friends: ['Bu', 'Sa'], 
-                enemies: ['Su', 'Ch', 'Ku'],
-                neutral: ['Gu', 'Ra', 'Ke'] 
-            },
-            'Sa': { 
-                friends: ['Bu', 'Sk'], 
-                enemies: ['Su', 'Ch', 'Ku'],
-                neutral: ['Gu', 'Ra', 'Ke'] 
-            },
-            'Ra': { 
-                friends: ['Sa', 'Sk'], 
-                enemies: ['Su', 'Ch', 'Ku'],
-                neutral: ['Bu', 'Gu', 'Ke'] 
-            },
-            'Ke': { 
-                friends: ['Ku', 'Gu'], 
-                enemies: ['Su', 'Ch'],
-                neutral: ['Bu', 'Sk', 'Sa', 'Ra'] 
-            }
+            'Su': { friends: ['Ch', 'Ku', 'Gu'], enemies: ['Sk', 'Sa'], neutral: ['Bu', 'Ra', 'Ke'] },
+            'Ch': { friends: ['Su', 'Bu'], enemies: [], neutral: ['Gu', 'Ra', 'Ke', 'Sk', 'Sa', 'Ku'] },
+            'Ku': { friends: ['Su', 'Ch', 'Gu'], enemies: ['Bu', 'Sk', 'Sa'], neutral: ['Ra', 'Ke'] },
+            'Bu': { friends: ['Su', 'Sk'], enemies: ['Ch', 'Ku'], neutral: ['Gu', 'Sa', 'Ra', 'Ke'] },
+            'Gu': { friends: ['Su', 'Ch', 'Ku'], enemies: ['Bu', 'Sk'], neutral: ['Sa', 'Ra', 'Ke'] },
+            'Sk': { friends: ['Bu', 'Sa'], enemies: ['Su', 'Ch', 'Ku'], neutral: ['Gu', 'Ra', 'Ke'] },
+            'Sa': { friends: ['Bu', 'Sk'], enemies: ['Su', 'Ch', 'Ku'], neutral: ['Gu', 'Ra', 'Ke'] },
+            'Ra': { friends: ['Sa', 'Sk'], enemies: ['Su', 'Ch', 'Ku'], neutral: ['Bu', 'Gu', 'Ke'] },
+            'Ke': { friends: ['Ku', 'Gu'], enemies: ['Su', 'Ch'], neutral: ['Bu', 'Sk', 'Sa', 'Ra'] }
         };
 
-        // Function to get lordship based on Lg rashi
         function getLordship(planetName, lagnaRashi) {
             if (!lagnaRashi || planetName === 'Lg' || planetName === 'Ra' || planetName === 'Ke') return '';
             return lordshipData[lagnaRashi][planetName] || '';
@@ -513,12 +603,10 @@
         const topTable = document.getElementById('topTable');
         const planetTable = document.getElementById('planetTable');
 
-        // Helper: return planet selects in the defined planets[] order (Lg first)
         function getPlanetSelectsOrdered() {
             return planets.map(p => document.querySelector(`select[data-planet="${p}"]`));
         }
         
-        // Function to calculate house number from Lg
         function calculateHouseNumber(planetRashiNumber, lagnaRashiNumber) {
             if (!planetRashiNumber || !lagnaRashiNumber) return '';
             if (planetRashiNumber === lagnaRashiNumber) return '1';
@@ -528,20 +616,16 @@
             return houseNumber.toString();
         }
 
-        // Function to find conjunctions for a planet
         function findConjunctions(planetIndex, rashiNumber, allSelects) {
             let conjunctions = [];
             allSelects.forEach((select, index) => {
                 if (index !== planetIndex && select.value === rashiNumber && rashiNumber !== '' && planets[index] !== 'Lg') {
                     let planetName = planets[index];
-                    
-                    // Add symbols based on planet type
                     if (planetName === 'Gu' || planetName === 'Sk') {
                         planetName += '(+)';
                     } else if (['Sa', 'Ku', 'Ra', 'Ke', 'Su'].includes(planetName)) {
                         planetName += '(-)';
                     } else if (planetName === 'Bu') {
-                        // Check if Bu is with Gu or Sk
                         let hasGuOrSk = false;
                         allSelects.forEach((innerSelect, innerIndex) => {
                             if (innerIndex !== index && innerSelect.value === rashiNumber) {
@@ -553,80 +637,95 @@
                         });
                         planetName += hasGuOrSk ? '(+)' : '(-)';
                     }
-                    
                     conjunctions.push(planetName);
                 }
             });
             return conjunctions.join(', ');
         }
 
-        // Function to update chart and conjunctions
         function updateChart() {
-            // Clear all boxes first
             for(let i = 1; i <= 12; i++) {
                 document.getElementById(`box${i}`).textContent = '';
             }
             
-            // Get all planet dropdowns (exclude the lord-select)
             const selects = getPlanetSelectsOrdered();
+            const lagnaRashiNumber = selects[0] ? selects[0].value : '';
             
-            // Update chart
             selects.forEach((select, index) => {
                 const rashiNumber = select.value;
                 if(rashiNumber) {
                     const planetName = planets[index];
                     const box = document.getElementById(`box${rashiNumber}`);
                     box.textContent = box.textContent ? box.textContent + ', ' + planetName : planetName;
+
+                    const row = select.parentNode.parentNode;
+
+                    if (index === 0) {
+                        if (row.cells[2]) row.cells[2].textContent = '';
+                        if (row.cells[3]) row.cells[3].textContent = '';
+                        if (row.cells[5]) row.cells[5].textContent = '';
+                        if (row.cells[8]) { row.cells[8].textContent = ''; row.cells[8].className = ''; }
+
+                        const conjunctionCell = row.cells[6];
+                        conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
+
+                        const aspectCell = row.cells[7];
+                        aspectCell.textContent = findAspects(index, rashiNumber, selects);
+                    } else {
+                        const strengthCell = row.cells[3];
+                        const houseCell = row.cells[5];
+                        const houseNumber = calculateHouseNumber(rashiNumber, lagnaRashiNumber);
+
+                        let symbol = '';
+                        if (['1', '4', '5', '7', '9', '10'].includes(houseNumber)) {
+                            symbol = '(+)';
+                        } else if (['6', '8', '12'].includes(houseNumber)) {
+                            symbol = '(-)';
+                        } else if (['2', '3', '11'].includes(houseNumber)) {
+                            symbol = '(N)';
+                        }
+
+                        houseCell.textContent = houseNumber + symbol;
+
+                        const planetStrength = determineStrength(planetName, parseInt(rashiNumber));
+                        strengthCell.textContent = planetStrength;
+
+                        const lordshipCell = row.cells[2];
+                        lordshipCell.textContent = getLordship(planetName, lagnaRashiNumber);
+
+                        const conjunctionCell = row.cells[6];
+                        conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
+
+                        const aspectCell = row.cells[7];
+                        aspectCell.textContent = findAspects(index, rashiNumber, selects);
+                    }
                 }
             });
 
-            // Update conjunctions
-            selects.forEach((select, index) => {
-                // cell indices: 0=planet,1=rashi,2=adhipathya,3=strength,4=rashiNumber(hidden),5=sthaana,6=samyoga,7=drusti,8=compound
-                const conjunctionCell = select.parentNode.parentNode.cells[6];
-                const rashiNumber = select.value;
-                conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
-            });
-
-            // Update aspects
-            selects.forEach((select, index) => {
-                const aspectCell = select.parentNode.parentNode.cells[7];
-                const rashiNumber = select.value;
-                aspectCell.textContent = findAspects(index, rashiNumber, selects);
-            });
-
-            // Update compound relationships
             updateCompoundRelationships();
-            // Update Lord row if present
             if (typeof updateLordRow === 'function') updateLordRow();
-            // Refresh Karaka displays if selected
             const k = document.getElementById('karakaSelect');
             const k2 = document.getElementById('karaka2Select');
             if (k && k.value && typeof copyPlanetToKaraka === 'function') copyPlanetToKaraka(k.value);
             if (k2 && k2.value && typeof copyPlanetToKaraka2 === 'function') copyPlanetToKaraka2(k2.value);
         }
         
-        // Function to calculate aspects for a planet
         function calculateAspects(targetRashi, aspectingPlanet, aspectingRashi) {
             if (!targetRashi || !aspectingRashi) return false;
             
             const source = parseInt(aspectingRashi);
             const target = parseInt(targetRashi);
             
-            // Special aspects for specific planets
             const aspectingPlanetName = planets[aspectingPlanet];
             let aspects = [];
             
-            // Check 7th aspect for all planets except Lg
             if (aspectingPlanetName !== 'Lg') {
                 let seventhHouse = source + 6;
                 if (seventhHouse > 12) seventhHouse -= 12;
                 if (target === seventhHouse) aspects.push("7th");
             }
             
-            // Check special aspects
             if (aspectingPlanetName === 'Gu') {
-                // Guru aspects 5th and 9th houses
                 let fifthHouse = source + 4;
                 let ninthHouse = source + 8;
                 
@@ -637,7 +736,6 @@
                 if (target === ninthHouse) aspects.push("9th");
             }
             else if (aspectingPlanetName === 'Sa') {
-                // Sani aspects 3rd and 10th houses
                 let thirdHouse = source + 2;
                 let tenthHouse = source + 9;
                 
@@ -648,7 +746,6 @@
                 if (target === tenthHouse) aspects.push("10th");
             }
             else if (aspectingPlanetName === 'Ku') {
-                // Kuja aspects 4th and 8th houses
                 let fourthHouse = source + 3;
                 let eighthHouse = source + 7;
                 
@@ -662,7 +759,6 @@
             return aspects.length > 0 ? aspects.join(",") : false;
         }
 
-        // Function to find aspects for a planet
         function findAspects(planetIndex, rashiNumber, allSelects) {
             let aspects = [];
             allSelects.forEach((select, index) => {
@@ -671,13 +767,11 @@
                     if (aspectType && planets[index] !== 'Lg') {
                         let planetName = planets[index];
                         
-                        // Add symbols based on planet type
                         if (planetName === 'Gu' || planetName === 'Sk') {
                             planetName += '(+)';
                         } else if (['Sa', 'Ku', 'Ra', 'Ke', 'Su'].includes(planetName)) {
                             planetName += '(-)';
                         } else if (planetName === 'Bu') {
-                            // Check if Bu is aspected by Gu or Sk
                             let hasGuOrSkAspect = false;
                             allSelects.forEach((innerSelect, innerIndex) => {
                                 if (innerIndex !== index && innerSelect.value !== '') {
@@ -690,90 +784,13 @@
                             planetName += hasGuOrSkAspect ? '(+)' : '(-)';
                         }
                         
-                        aspects.push(planetName); // Removed aspectType from output
+                        aspects.push(planetName);
                     }
                 }
             });
             return aspects.join(', ');
         }
 
-        // Function to update chart and all calculations
-        function updateChart() {
-            // Clear all boxes first
-            for(let i = 1; i <= 12; i++) {
-                document.getElementById(`box${i}`).textContent = '';
-            }
-            
-            const selects = getPlanetSelectsOrdered();
-            const lagnaRashiNumber = selects[0] ? selects[0].value : ''; // Get Lg's rashi number
-            
-            // Update chart and calculations
-            selects.forEach((select, index) => {
-                const rashiNumber = select.value;
-                if (rashiNumber) {
-                    // Update planet names in boxes
-                    const planetName = planets[index];
-                    const box = document.getElementById(`box${rashiNumber}`);
-                    box.textContent = box.textContent ? box.textContent + ', ' + planetName : planetName;
-
-                    const row = select.parentNode.parentNode;
-
-                    // If this is the Lg row (index 0) show ONLY Samyoga and Drusti; clear other cells
-                    if (index === 0) {
-                        // clear adhipathya, strength, house, compound
-                        if (row.cells[2]) row.cells[2].textContent = '';
-                        if (row.cells[3]) row.cells[3].textContent = '';
-                        if (row.cells[5]) row.cells[5].textContent = '';
-                        if (row.cells[8]) { row.cells[8].textContent = ''; row.cells[8].className = ''; }
-
-                        // Update conjunctions (SAMYOGA)
-                        const conjunctionCell = row.cells[6];
-                        conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
-
-                        // Update aspects (DRUSTI)
-                        const aspectCell = row.cells[7];
-                        aspectCell.textContent = findAspects(index, rashiNumber, selects);
-                    } else {
-                        // Update house numbers in table
-                        const strengthCell = row.cells[3];
-                        const houseCell = row.cells[5];
-                        const houseNumber = calculateHouseNumber(rashiNumber, lagnaRashiNumber);
-
-                        // Add symbols based on house number
-                        let symbol = '';
-                        if (['1', '4', '5', '7', '9', '10'].includes(houseNumber)) {
-                            symbol = '(+)';
-                        } else if (['6', '8', '12'].includes(houseNumber)) {
-                            symbol = '(-)';
-                        } else if (['2', '3', '11'].includes(houseNumber)) {
-                            symbol = '(N)';
-                        }
-
-                        houseCell.textContent = houseNumber + symbol;
-
-                        // Determine strength (Exaltation/Debilitation/Own House)
-                        const planetStrength = determineStrength(planetName, parseInt(rashiNumber));
-                        strengthCell.textContent = planetStrength;
-                        // Update lordship
-                        const lordshipCell = row.cells[2];
-                        lordshipCell.textContent = getLordship(planetName, lagnaRashiNumber);
-
-                        // Update conjunctions
-                        const conjunctionCell = row.cells[6];
-                        conjunctionCell.textContent = findConjunctions(index, rashiNumber, selects);
-
-                        // Update aspects
-                        const aspectCell = row.cells[7];
-                        aspectCell.textContent = findAspects(index, rashiNumber, selects);
-                    }
-                }
-            });
-
-            // Update compound relationships
-            updateCompoundRelationships();
-        }
-
-        // Load planet strength data from JSON file (with fallback to embedded data)
         let planetStrengthData = null;
         async function loadPlanetStrengthData() {
             try {
@@ -783,25 +800,22 @@
                 planetStrengthData = {};
                 data.forEach(item => { planetStrengthData[item.Planet] = item; });
             } catch (e) {
-                // Fallback: embed the JSON directly if fetch fails
-                console.warn('Failed to load planet_strength.json, using embedded fallback. Error:', e);
                 const fallback = [
-  { "Planet": "Su", "Exaltation": 1, "Deblitation": 7, "Own_house1": 5, "Own_house2": 0 },
-  { "Planet": "Ch", "Exaltation": 2, "Deblitation": 8, "Own_house1": 4, "Own_house2": 0 },
-  { "Planet": "Ku", "Exaltation": 10, "Deblitation": 4, "Own_house1": 1, "Own_house2": 8 },
-  { "Planet": "Bu", "Exaltation": 6, "Deblitation": 12, "Own_house1": 3, "Own_house2": 6 },
-  { "Planet": "Gu", "Exaltation": 4, "Deblitation": 10, "Own_house1": 9, "Own_house2": 12 },
-  { "Planet": "Sk", "Exaltation": 12, "Deblitation": 6, "Own_house1": 2, "Own_house2": 7 },
-  { "Planet": "Sa", "Exaltation": 7, "Deblitation": 1, "Own_house1": 10, "Own_house2": 11 },
-  { "Planet": "Ra", "Exaltation": 3, "Deblitation": 9, "Own_house1": 0, "Own_house2": 0 },
-  { "Planet": "Ke", "Exaltation": 9, "Deblitation": 3, "Own_house1": 0, "Own_house2": 0 }
-];
+                    { "Planet": "Su", "Exaltation": 1, "Deblitation": 7, "Own_house1": 5, "Own_house2": 0 },
+                    { "Planet": "Ch", "Exaltation": 2, "Deblitation": 8, "Own_house1": 4, "Own_house2": 0 },
+                    { "Planet": "Ku", "Exaltation": 10, "Deblitation": 4, "Own_house1": 1, "Own_house2": 8 },
+                    { "Planet": "Bu", "Exaltation": 6, "Deblitation": 12, "Own_house1": 3, "Own_house2": 6 },
+                    { "Planet": "Gu", "Exaltation": 4, "Deblitation": 10, "Own_house1": 9, "Own_house2": 12 },
+                    { "Planet": "Sk", "Exaltation": 12, "Deblitation": 6, "Own_house1": 2, "Own_house2": 7 },
+                    { "Planet": "Sa", "Exaltation": 7, "Deblitation": 1, "Own_house1": 10, "Own_house2": 11 },
+                    { "Planet": "Ra", "Exaltation": 3, "Deblitation": 9, "Own_house1": 0, "Own_house2": 0 },
+                    { "Planet": "Ke", "Exaltation": 9, "Deblitation": 3, "Own_house1": 0, "Own_house2": 0 }
+                ];
                 planetStrengthData = {};
                 fallback.forEach(item => { planetStrengthData[item.Planet] = item; });
             }
         }
 
-        // Determine strength label for a planet at a given rashi number
         function determineStrength(planetCode, rashiNumber) {
             if (!planetStrengthData || !planetStrengthData[planetCode] || !rashiNumber) return '';
             const info = planetStrengthData[planetCode];
@@ -813,7 +827,6 @@
             return parts.join(', ');
         }
 
-        // COMPOUND RELATIONSHIP FUNCTIONS - UPDATED WITH MATRIX APPROACH
         function getHouseDistance(house1, house2) {
             if (!house1 || !house2) return 0;
             let distance = Math.abs(house2 - house1);
@@ -844,7 +857,6 @@
             return 'neutral';
         }
 
-        // NEW: Compound relationship matrix based on your table
         function getFinalRelationship(naturalRel, tempRel) {
             const relationshipMatrix = {
                 'friend': {
@@ -867,7 +879,6 @@
             return relationshipMatrix[naturalRel][tempRel];
         }
 
-        // Function to get rashi lord's position
         function getRashiLordPosition(rashiLord, allSelects) {
             for (let i = 0; i < planets.length; i++) {
                 if (planets[i] === rashiLord && allSelects[i].value) {
@@ -877,22 +888,18 @@
             return null;
         }
 
-        // Function to calculate relationship with rashi lord only
         function calculatePlanetRashiLordRelationship(planetIndex, allSelects) {
             const currentPlanet = planets[planetIndex];
             const currentHouse = allSelects[planetIndex].value;
             
             if (!currentHouse || currentPlanet === 'Lg') return null;
             
-            // Get the rashi lord for the current planet's position
             const rashiLord = rashiLords[currentHouse];
             if (!rashiLord) return null;
             
-            // Get the rashi lord's position
             const rashiLordPosition = getRashiLordPosition(rashiLord, allSelects);
             if (!rashiLordPosition) return null;
             
-            // Calculate relationship using the new matrix approach
             const naturalRel = getNaturalRelationship(currentPlanet, rashiLord);
             const tempRel = getTemporaryRelationship(parseInt(currentHouse), rashiLordPosition);
             const relationship = getFinalRelationship(naturalRel, tempRel);
@@ -904,12 +911,11 @@
             };
         }
 
-        // Function to update compound relationships for all planets
         function updateCompoundRelationships() {
             const selects = getPlanetSelectsOrdered();
             
             selects.forEach((select, index) => {
-                const compoundCell = select.parentNode.parentNode.cells[8]; // 8th column for compound relationships
+                const compoundCell = select.parentNode.parentNode.cells[8];
                 if (planets[index] === 'Lg') {
                     compoundCell.innerHTML = '';
                     compoundCell.className = '';
@@ -936,47 +942,36 @@
         }
 
         planets.forEach(planet => {
-            // insert Lg into topTable, others into planetTable
             const row = (planet === 'Lg') ? topTable.insertRow() : planetTable.insertRow();
             
-            // Planet name cell
             const planetCell = row.insertCell();
             planetCell.textContent = planet;
             
-            // Rashi dropdown cell
             const rashiCell = row.insertCell();
             const select = document.createElement('select');
-            select.dataset.planet = planet; // mark which planet this select belongs to
-            select.innerHTML = '<option value="">Select Rashi</option>' + 
+            select.dataset.planet = planet;
+            select.innerHTML = '<option value="">Select</option>' + 
                 rashis.map((rashi, index) => `<option value="${index + 1}">${rashi}</option>`).join('');
             
-            // Add Lordship cell (moved up)
             const lordshipCell = row.insertCell();
             
-            // Strength cell
             const strengthCell = row.insertCell();
             
-            // Rashi number cell (hidden)
             const numberCell = row.insertCell();
-            numberCell.style.display = 'none';  // Hide the cell
+            numberCell.style.display = 'none';
             
-            // House number cell
             const houseCell = row.insertCell();
             
-            // Conjunction cell
             const conjunctionCell = row.insertCell();
             
-            // Aspect cell
             const aspectCell = row.insertCell();
             
-            // Compound Relationship cell
             const compoundCell = row.insertCell();
             
             select.addEventListener('change', (e) => {
                 numberCell.textContent = e.target.value;
                 updateChart();
                 if (typeof updateLordRow === 'function') updateLordRow();
-                // refresh karaka displays if those planets are selected
                 if (typeof copyPlanetToKaraka === 'function') {
                     const k = document.getElementById('karakaSelect');
                     const k2 = document.getElementById('karaka2Select');
@@ -988,19 +983,15 @@
             rashiCell.appendChild(select);
         });
 
-    // Insert a "Sthaana Bhala" row into topTable (after Lg)
         (function createLordRow(){
-            // find Lg row index in topTable
             const rows = Array.from(topTable.rows);
             const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lg');
             const insertIndex = lagnaIndex >= 0 ? lagnaIndex + 1 : topTable.rows.length;
             const lordRow = topTable.insertRow(insertIndex);
 
-            // Name cell
             const nameCell = lordRow.insertCell();
             nameCell.textContent = 'Sthaana Bhala';
 
-            // House selection cell (2nd..12th)
             const lordSelectCell = lordRow.insertCell();
             const lordSelect = document.createElement('select');
             lordSelect.className = 'lord-select';
@@ -1008,32 +999,22 @@
                 [2,3,4,5,6,7,8,9,10,11,12].map(n => `<option value="${n}">${n}th House</option>`).join('');
             lordSelectCell.appendChild(lordSelect);
 
-            // Adhipathya cell
             const lordAdhipathyaCell = lordRow.insertCell();
-            // Strength cell
             const lordStrengthCell = lordRow.insertCell();
-            // hidden rashi number cell
             const lordHiddenCell = lordRow.insertCell();
             lordHiddenCell.style.display = 'none';
-            // House number cell
             const lordHouseCell = lordRow.insertCell();
-            // Conjunction/Samyoga cell
             const lordConjunctionCell = lordRow.insertCell();
-            // Aspect/Drusti cell
             const lordAspectCell = lordRow.insertCell();
-            // Compound/P.Maitri cell
             const lordCompoundCell = lordRow.insertCell();
 
             function updateLordRow() {
-                // Get current Lg rashi (from ordered planet selects)
                 const selects = getPlanetSelectsOrdered();
                 const lagnaSelect = selects[0];
                 const lagnaRashi = lagnaSelect ? lagnaSelect.value : '';
                 const selectedHouse = lordSelect.value;
 
-                // Clear if not possible to compute
                 if (!lagnaRashi || !selectedHouse) {
-                    // Clear cells
                     lordAdhipathyaCell.textContent = '';
                     lordStrengthCell.textContent = '';
                     lordHiddenCell.textContent = '';
@@ -1044,12 +1025,9 @@
                     return;
                 }
 
-                // Calculate target rashi number: Lg + (house - 1)
                 let target = parseInt(lagnaRashi, 10) + parseInt(selectedHouse, 10) - 1;
                 if (target > 12) target -= 12;
 
-                // We will only populate Samyoga (occupants) and Drusti (aspects) for the Lord row.
-                // Clear other Lord row cells
                 lordAdhipathyaCell.textContent = '';
                 lordStrengthCell.textContent = '';
                 lordHiddenCell.textContent = '';
@@ -1057,7 +1035,6 @@
                 lordCompoundCell.textContent = '';
                 lordCompoundCell.className = '';
 
-                // Samyoga: planets posited in that rashi (occupants)
                 const occupants = [];
                 selects.forEach((sel, idx) => {
                     if (sel && sel.value && parseInt(sel.value,10) === target && planets[idx] !== 'Lg') {
@@ -1066,10 +1043,9 @@
                 });
                 lordConjunctionCell.textContent = occupants.join(', ');
 
-                // Drusti: which planets aspect this target rashi
                 const aspectors = [];
                 selects.forEach((sel, idx) => {
-                    if (idx === 0) return; // skip Lg as an aspecting planet
+                    if (idx === 0) return;
                     if (!sel.value) return;
                     const aspectType = calculateAspects(String(target), idx, sel.value);
                     if (aspectType) {
@@ -1077,7 +1053,6 @@
                         if (pname === 'Gu' || pname === 'Sk') pname += '(+)';
                         else if (['Sa','Ku','Ra','Ke','Su'].includes(pname)) pname += '(-)';
                         else if (pname === 'Bu') {
-                            // check if Gu or Sk aspects
                             let hasGuOrSk = false;
                             selects.forEach((innerSel, innerIdx) => {
                                 if (innerIdx !== idx && innerSel.value) {
@@ -1093,42 +1068,29 @@
                 lordAspectCell.textContent = aspectors.join(', ');
             }
 
-            // Wire updates: when Lg or positions change, refresh Lord row
             lordSelect.addEventListener('change', updateLordRow);
-
-            // Also refresh when DOMContent loaded and after initial positions applied
             document.addEventListener('DOMContentLoaded', () => updateLordRow());
-            // call right away in case positions already set
             updateLordRow();
-            // expose for other code
             window.updateLordRow = updateLordRow;
         })();
 
-    // Insert Karaka and Adhipatya Bhala rows into topTable after Sthaana Bhala
         (function createKarakaRows(){
-            // find Lg row index and Lord row index to position Karaka rows afterwards
             const rows = Array.from(topTable.rows);
             const lagnaIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Lg');
             const lordIndex = rows.findIndex(r => r.cells && r.cells[0] && r.cells[0].textContent.trim() === 'Sthaana Bhala');
             const baseIndex = (lordIndex >= 0) ? lordIndex + 1 : (lagnaIndex >= 0 ? lagnaIndex + 1 : topTable.rows.length);
 
-            // Karaka row
             const karakaRow = topTable.insertRow(baseIndex);
             karakaRow.insertCell().textContent = 'Karaka Bhala';
             const karakaRashiCell = karakaRow.insertCell();
             const karakaSelect = document.createElement('select');
             karakaSelect.className = 'karaka-select';
-            karakaSelect.style.display = 'inline-block';
-            karakaSelect.style.width = '180px';
-            karakaSelect.style.maxWidth = '90%';
-            karakaSelect.style.margin = '0';
-            karakaSelect.disabled = false;
             karakaSelect.id = 'karakaSelect';
             karakaSelect.innerHTML = '<option value="">Select Planet</option>' + planets.map(p=>`<option value="${p}">${p}</option>`).join('');
             karakaRashiCell.appendChild(karakaSelect);
-            // span next to select to show rashi without overwriting the select element
             const karakaRashiSpan = document.createElement('span');
             karakaRashiSpan.style.marginLeft = '8px';
+            karakaRashiSpan.style.fontSize = '0.7rem';
             karakaRashiCell.appendChild(karakaRashiSpan);
             const karakaAdhipathya = karakaRow.insertCell();
             const karakaStrength = karakaRow.insertCell();
@@ -1138,23 +1100,17 @@
             const karakaDrusti = karakaRow.insertCell();
             const karakaPm = karakaRow.insertCell();
 
-            // Adhipatya Bhala row
             const karaka2Row = topTable.insertRow(baseIndex + 1);
             karaka2Row.insertCell().textContent = 'Adhipatya Bhala';
             const karaka2RashiCell = karaka2Row.insertCell();
             const karaka2Select = document.createElement('select');
             karaka2Select.className = 'karaka-select';
-            karaka2Select.style.display = 'inline-block';
-            karaka2Select.style.width = '180px';
-            karaka2Select.style.maxWidth = '90%';
-            karaka2Select.style.margin = '0';
-            karaka2Select.disabled = false;
             karaka2Select.id = 'karaka2Select';
             karaka2Select.innerHTML = '<option value="">Select Planet</option>' + planets.map(p=>`<option value="${p}">${p}</option>`).join('');
             karaka2RashiCell.appendChild(karaka2Select);
-            // span next to select to show rashi without overwriting the select element
             const karaka2RashiSpan = document.createElement('span');
             karaka2RashiSpan.style.marginLeft = '8px';
+            karaka2RashiSpan.style.fontSize = '0.7rem';
             karaka2RashiCell.appendChild(karaka2RashiSpan);
             const karaka2Adhipathya = karaka2Row.insertCell();
             const karaka2Strength = karaka2Row.insertCell();
@@ -1210,141 +1166,51 @@
 
             karakaSelect.addEventListener('change', (e)=> copyPlanetToKaraka(e.target.value));
             karaka2Select.addEventListener('change', (e)=> copyPlanetToKaraka2(e.target.value));
-            // expose for testing
             window.copyPlanetToKaraka = copyPlanetToKaraka;
             window.copyPlanetToKaraka2 = copyPlanetToKaraka2;
         })();
 
-    // Load planet strength data on startup
-    loadPlanetStrengthData().then(() => {
-        updateCompoundRelationships(); // Initialize compound relationships
-    });
+        loadPlanetStrengthData().then(() => {
+            updateCompoundRelationships();
+        });
 
-    // Parse positions input like "12,1,8,5,10,7,10,6,3,9" or with dots
-    function applyPositionsFromInput() {
-        const input = document.getElementById('positionsInput');
-        if (!input) return;
-        const raw = input.value.trim();
-        if (!raw) return;
+        function applyPositionsFromInput() {
+            const input = document.getElementById('positionsInput');
+            if (!input) return;
+            const raw = input.value.trim();
+            if (!raw) return;
 
-        // allow commas, dots or spaces as separators
-        const parts = raw.split(/[.,\s]+/).map(s => s.trim()).filter(Boolean);
-        if (parts.length < planets.length) {
-            alert('Please provide positions for all planets: Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke');
-            return;
-        }
+            const parts = raw.split(/[.,\s]+/).map(s => s.trim()).filter(Boolean);
+            if (parts.length < planets.length) {
+                alert('Please provide positions for all planets: Lg, Su, Ch, Ku, Bu, Gu, Sk, Sa, Ra, Ke');
+                return;
+            }
 
-    const selects = getPlanetSelectsOrdered();
-        for (let i = 0; i < planets.length && i < parts.length; i++) {
-            const v = parts[i];
-            const n = parseInt(v, 10);
-            if (!selects[i]) continue;
-            // set the visible select and the hidden numberCell
-            selects[i].value = isNaN(n) ? '' : String(n);
-            const row = selects[i].parentNode.parentNode;
-            if (row && row.cells && row.cells[4]) {
-                row.cells[4].textContent = isNaN(n) ? '' : String(n);
+            const selects = getPlanetSelectsOrdered();
+            for (let i = 0; i < planets.length && i < parts.length; i++) {
+                const v = parts[i];
+                const n = parseInt(v, 10);
+                if (!selects[i]) continue;
+                selects[i].value = isNaN(n) ? '' : String(n);
+                const row = selects[i].parentNode.parentNode;
+                if (row && row.cells && row.cells[4]) {
+                    row.cells[4].textContent = isNaN(n) ? '' : String(n);
+                }
+            }
+
+            updateChart();
+            updateCompoundRelationships();
+            if (typeof updateLordRow === 'function') updateLordRow();
+            if (typeof copyPlanetToKaraka === 'function') {
+                const karakaSelect = Array.from(document.querySelectorAll('#topTable select')).find(s => s && s.options && s.options.length > 1);
+                const karaka2Select = Array.from(document.querySelectorAll('#topTable select')).reverse().find(s => s && s.options && s.options.length > 1);
+                if (karakaSelect && karakaSelect.value) copyPlanetToKaraka(karakaSelect.value);
+                if (karaka2Select && karaka2Select.value) copyPlanetToKaraka2(karaka2Select.value);
             }
         }
 
-        // After setting selects, update chart and compound relationships
-        updateChart();
-        updateCompoundRelationships();
-        if (typeof updateLordRow === 'function') updateLordRow();
-        // Refresh Karaka displays if user already selected planets
-        if (typeof copyPlanetToKaraka === 'function') {
-            const kSel = document.querySelector('#topTable select');
-            // better: find the karaka select by its options (we created two selects in topTable)
-            const karakaSelect = Array.from(document.querySelectorAll('#topTable select')).find(s => s && s.options && s.options.length > 1);
-            const karaka2Select = Array.from(document.querySelectorAll('#topTable select')).reverse().find(s => s && s.options && s.options.length > 1);
-            if (karakaSelect && karakaSelect.value) copyPlanetToKaraka(karakaSelect.value);
-            if (karaka2Select && karaka2Select.value) copyPlanetToKaraka2(karaka2Select.value);
-        }
-    }
+        document.getElementById('applyPositionsBtn').addEventListener('click', applyPositionsFromInput);
 
-    document.getElementById('applyPositionsBtn').addEventListener('click', applyPositionsFromInput);
-    </script>
-
-    <!-- Read Button -->
-    <style>
-        /* Read Button Container Styles */
-        .read-button-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-
-        .read-button {
-            padding: 10px 20px;
-            background-color: #1a237e;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background-color 0.3s ease;
-        }
-
-        .read-button:hover {
-            background-color: #283593;
-        }
-
-        /* Context Window Styles */
-        .context-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            max-width: 800px;
-            max-height: 80vh;
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            z-index: 2000;
-            overflow-y: auto;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1999;
-        }
-
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            .context-window {
-                background-color: #1e1e1e;
-                color: #ffffff;
-            }
-        }
-    </style>
-
-    <!-- Add these elements before the closing body tag -->
-    <div class="read-button-container">
-        <button class="read-button" onclick="showContextWindow()">Read</button>
-    </div>
-
-    <div class="overlay" id="overlay"></div>
-    <div class="context-window" id="contextWindow">
-        <h2>Planet Details</h2>
-        <div id="planetDetails"></div>
-        <div class="button-container">
-            <button class="context-button print-button" onclick="downloadPlanetDetails()">Print</button>
-            <button class="context-button close-button" onclick="hideContextWindow()">Close</button>
-        </div>
-    </div>
-
-    <script>
-        // Add the context window functions
         function showContextWindow() {
             const contextWindow = document.getElementById('contextWindow');
             const overlay = document.getElementById('overlay');
@@ -1368,7 +1234,7 @@
                     const planetInfo = document.createElement('div');
                     planetInfo.className = 'planet-info';
                     
-                    let infoText = `<h3>${planet}: </h3><p>`;
+                    let infoText = `<h3>${planet}</h3><p>`;
                     
                     if (adhipathya) {
                         infoText += `${adhipathya} Lord ${planet}`;
@@ -1389,11 +1255,11 @@
                     }
                     
                     if (drusti) {
-                        infoText += `. aspected by ${drusti}`;
+                        infoText += `. Aspected by ${drusti}`;
                     }
 
                     if (compoundRel) {
-                        infoText += `. Relationship with Rashi Lord: ${compoundRel}`;
+                        infoText += `. Relationship: ${compoundRel}`;
                     }
                     
                     infoText += '.</p>';
@@ -1402,15 +1268,13 @@
                 }
             });
         
-            contextWindow.style.display = 'block';
+            contextWindow.style.display = 'flex';
             overlay.style.display = 'block';
         }
 
         function hideContextWindow() {
-            const contextWindow = document.getElementById('contextWindow');
-            const overlay = document.getElementById('overlay');
-            contextWindow.style.display = 'none';
-            overlay.style.display = 'none';
+            document.getElementById('contextWindow').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         function downloadPlanetDetails() {
